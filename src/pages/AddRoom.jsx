@@ -27,7 +27,7 @@ function AddRoom() {
       const formData = new FormData();
       for (let key in room) formData.append(key, room[key]);
 
-      await axios.post("http://localhost:5000/api/rooms", formData, {
+      await axios.post("https://hotel-booking-site-d1jr.onrender.com/api/rooms", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

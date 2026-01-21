@@ -7,7 +7,7 @@ function StaffDashboard() {
   const [bookings, setBookings] = useState([]);
 
   const staff = JSON.parse(localStorage.getItem('staff'));
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
 
   const fetchBookings = async () => {
     try {

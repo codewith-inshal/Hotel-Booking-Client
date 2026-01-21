@@ -13,7 +13,7 @@ function EditRoom() {
 
   async function fetchRoom() {
     const room = await axios.get(
-  `http://localhost:5000/api/rooms/${params.id}`
+  `https://hotel-booking-site-d1jr.onrender.com/api/rooms/${params.id}`
 );
   }
 
@@ -41,7 +41,7 @@ function EditRoom() {
     }
 
    await axios.patch(
-  `http://localhost:5000/api/rooms/${params.id}`,
+  `https://hotel-booking-site-d1jr.onrender.com/api/rooms/${params.id}`,
   formData,
   { headers: { "Content-Type": "multipart/form-data" } }
 );
@@ -59,7 +59,7 @@ function EditRoom() {
       {roomData.image && (
   <div className="text-center mb-3">
     <img
-      src={`http://localhost:5000/uploads/${roomData.image}`}
+      src={`https://hotel-booking-site-d1jr.onrender.com/uploads/${roomData.image}`}
       alt="room"
       width="120"
       style={{ borderRadius: "10px" }}

@@ -11,7 +11,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem('admin'));
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
 
   // Fetch Rooms
   const fetchRooms = async () => {
