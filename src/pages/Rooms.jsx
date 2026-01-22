@@ -8,11 +8,11 @@ function Rooms() {
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const fetchRooms = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/rooms`);
+      const res = await axios.get('http://localhost:5000/api/rooms');
       setRooms(res.data);
     } catch (err) {
       console.error(err);
@@ -32,7 +32,7 @@ function Rooms() {
           <Card key={room._id} style={{ width: '320px' }}>
             <Card.Img
               variant="top"
-              src={`${API_URL}/uploads/${room.image}`}
+              src={`http://localhost:5000/uploads/${room.image}`}
               height={200}
             />
             <Card.Body>

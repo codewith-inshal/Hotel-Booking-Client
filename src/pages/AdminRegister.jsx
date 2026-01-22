@@ -13,7 +13,7 @@ function AdminRegister() {
   });
 
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -23,7 +23,7 @@ function AdminRegister() {
   async function submitHandler(e) {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/admin/admin-register`, admin);
+      await axios.post(`http://localhost:5000/api/admin/admin-register`, admin);
       toast.success("Admin Registered Successfully!");
       navigate('/');
     } catch (error) {

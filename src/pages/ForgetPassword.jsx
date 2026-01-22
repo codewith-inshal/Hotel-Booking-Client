@@ -10,7 +10,7 @@ function ForgetPassword() {
     e.preventDefault()
 
     try {
-      const res = await axios.post('https://hotel-booking-site-d1jr.onrender.com/forgot-password', {
+      const res = await axios.post('http://localhost:5000/forgot-password', {
         email
       })
 

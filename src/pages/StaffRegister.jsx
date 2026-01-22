@@ -23,7 +23,7 @@ function StaffRegister() {
   async function submitHandler(e) {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/staff/staff-register`, staff);
+      await axios.post(`http://localhost:5000/api/staff/staff-register`, staff);
       toast.success("Staff Registered Successfully!");
       navigate('/');
     } catch (error) {

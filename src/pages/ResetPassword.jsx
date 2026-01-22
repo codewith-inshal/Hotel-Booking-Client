@@ -20,7 +20,7 @@ function ResetPassword() {
 
     try {
       const res = await axios.post(
-        `https://hotel-booking-site-d1jr.onrender.com/reset-password/${token}`,
+        `http://localhost:5000/reset-password/${token}`,
         { newPassword }
       )
 

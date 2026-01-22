@@ -11,12 +11,12 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem('admin'));
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   // Fetch Rooms
   const fetchRooms = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/rooms`);
+      const res = await axios.get(`http://localhost:5000/api/rooms`);
       setRooms(res.data);
     } catch (err) {
       console.error(err);
@@ -28,7 +28,7 @@ function AdminDashboard() {
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/api/bookings/pending`,
+        `http://localhost:5000/api/bookings/pending`,
         {
           headers: {
             Authorization: `Bearer ${admin.token}`,
@@ -49,7 +49,7 @@ function AdminDashboard() {
 
   const deleteRoom = async (id) => {
     try {
-      await axios.delete(`${API_URL}/api/rooms/${id}`, {
+      await axios.delete(`http://localhost:5000/api/rooms/${id}`, {
         headers: {
           Authorization: `Bearer ${admin.token}`,
         },
@@ -65,7 +65,7 @@ function AdminDashboard() {
   const updateBookingStatus = async (id, status) => {
     try {
       await axios.patch(
-        `${API_URL}/api/bookings/${id}`,
+        `http://localhost:5000/api/bookings/${id}`,
         { status },
         {
           headers: {
@@ -144,7 +144,7 @@ function AdminDashboard() {
               variant="top"
               src={
                 room.image
-                  ? `${API_URL}/uploads/${room.image}`
+                  ? `http://localhost:5000/uploads/${room.image}`
                   : 'https://via.placeholder.com/300x180'
               }
             />

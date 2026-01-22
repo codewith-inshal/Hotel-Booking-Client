@@ -15,7 +15,7 @@ function Contact() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://hotel-booking-site-d1jr.onrender.com/contact', formData);
+      const response = await axios.post('http://localhost:5000/contact', formData);
       toast.success('Message sent successfully!');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {

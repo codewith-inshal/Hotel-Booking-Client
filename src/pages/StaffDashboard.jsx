@@ -7,12 +7,12 @@ function StaffDashboard() {
   const [bookings, setBookings] = useState([]);
 
   const staff = JSON.parse(localStorage.getItem('staff'));
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/api/bookings/pending`,
+        `http://localhost:5000/api/bookings/pending`,
         {
           headers: {
             Authorization: `Bearer ${staff.token}`,
@@ -33,7 +33,7 @@ function StaffDashboard() {
   const updateStatus = async (id, status) => {
     try {
       await axios.patch(
-        `${API_URL}/api/bookings/${id}`,
+        `http://localhost:5000/api/bookings/${id}`,
         { status },
         {
           headers: {

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function StaffLogin() {
   const [staff, setStaff] = useState({ email: '', password: '' });
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   // If staff already logged in, redirect to dashboard
   useEffect(() => {
@@ -23,7 +23,7 @@ function StaffLogin() {
   async function submitHandler(e) {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/api/staff/staff-login`, staff);
+      const res = await axios.post(`http://localhost:5000/api/staff/staff-login`, staff);
 
       // Save both staff info and token in localStorage
       const staffData = { token: res.data.token, email: staff.email };

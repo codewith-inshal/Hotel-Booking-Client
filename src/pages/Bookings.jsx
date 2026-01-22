@@ -6,11 +6,11 @@ import toast from 'react-hot-toast';
 function Bookings() {
   const [bookings, setBookings] = useState([]);
   const user = JSON.parse(localStorage.getItem('user'));
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/bookings/my-bookings`, {
+      const res = await axios.get(`http://localhost:5000/api/bookings/my-bookings`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setBookings(res.data);
@@ -27,7 +27,7 @@ function Bookings() {
   const cancelBooking = async (bookingId) => {
     try {
       await axios.patch(
-        `${API_URL}/api/bookings/${bookingId}/cancel`,
+        `http://localhost:5000/api/bookings/${bookingId}/cancel`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } }
       );

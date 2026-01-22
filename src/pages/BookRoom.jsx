@@ -16,7 +16,7 @@ function BookRoom() {
 
   const user = storedUser;
 
-  const API_URL = import.meta.env.VITE_API_URL || 'https://hotel-booking-site-d1jr.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const [formData, setFormData] = useState({
     firstName: user?.user?.firstName || '',
@@ -60,7 +60,7 @@ function BookRoom() {
       setLoading(true);
 
       await axios.post(
-        `${API_URL}/api/bookings/book-room`,
+        `http://localhost:5000/api/bookings/book-room`,
         { ...formData, roomId },
         {
           headers: {
