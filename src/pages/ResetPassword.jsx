@@ -1,69 +1,69 @@
-import React, { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function ResetPassword() {
-  const { token } = useParams()
-  const navigate = useNavigate()
+  const { token } = useParams();
+  const navigate = useNavigate();
 
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   async function submitHandler(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      return toast.error('Passwords do not match')
+      return toast.error("Passwords do not match");
     }
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/reset-password/${token}`,
-        { newPassword }
-      )
+        `http://localhost:5000/api/user/reset-password/${token}`,
+        { newPassword },
+      );
 
-      toast.success(res.data.msg || 'Password reset successful')
-      navigate('/user-login')
+      toast.success(res.data.msg);
+      navigate("/user-login");
     } catch (error) {
-      toast.error(error.response?.data?.msg || 'Invalid or expired link')
+      toast.error(error.response?.data?.msg);
     }
   }
 
   return (
-    <div className="w-50 mx-auto my-5">
-      <h2 className="mb-4">Reset Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <motion.div
+        className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <h2 className="text-3xl font-bold mb-6">Reset Password</h2>
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3">
-          <Form.Label>New Password</Form.Label>
-          <Form.Control
+        <form onSubmit={submitHandler}>
+          <input
             type="password"
-            placeholder="Enter new password"
+            placeholder="New Password"
+            className="w-full p-3 rounded-xl bg-gray-100 mb-4"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            required
           />
-        </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Confirm New Password</Form.Label>
-          <Form.Control
+          <input
             type="password"
-            placeholder="Confirm new password"
+            placeholder="Confirm Password"
+            className="w-full p-3 rounded-xl bg-gray-100 mb-4"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            required
           />
-        </Form.Group>
 
-        <Button type="submit" variant="success">
-          Reset Password
-        </Button>
-      </Form>
+          <button className="w-full bg-lime-400 py-3 rounded-xl font-bold">
+            Reset Password
+          </button>
+        </form>
+      </motion.div>
     </div>
-  )
+  );
 }
 
-export default ResetPassword
+export default ResetPassword;

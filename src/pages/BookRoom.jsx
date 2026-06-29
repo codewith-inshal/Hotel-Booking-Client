@@ -1,58 +1,68 @@
-import React, { useState } from 'react';
-import { Col, Form, Row, Alert } from 'react-bootstrap';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import { Col, Form, Row, Alert } from "react-bootstrap";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import { FaCalendarAlt, FaUserFriends, FaClipboardList } from "react-icons/fa";
 
 function BookRoom() {
   const { id: roomId } = useParams();
   const navigate = useNavigate();
 
-  // Get user info once from localStorage
-  const storedUser = JSON.parse(localStorage.getItem('user'));
-  if (!storedUser) {
-    navigate('/user-login'); // redirect if not logged in
-  }
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  if (!storedUser) navigate("/user-login");
 
   const user = storedUser;
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
   const [formData, setFormData] = useState({
-    firstName: user?.user?.firstName || '',
-    lastName: user?.user?.lastName || '',
-    email: user?.user?.email || '',
-    phone: '',
-    checkInDate: '',
-    checkOutDate: '',
+    firstName: user?.user?.firstName || "",
+    lastName: user?.user?.lastName || "",
+    email: user?.user?.email || "",
+    phone: "",
+    checkInDate: "",
+    checkOutDate: "",
     adults: 1,
     children: 0,
-    roomType: 'presidential',
+    roomType: "presidential",
     terms: false,
   });
 
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+    setFormData((p) => ({
+      ...p,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
+
+  const fetchMyBookings = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/bookings/my-bookings`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        },
+      );
+      setBookings(res.data);
+    } catch (err) {
+      toast.error("Failed to load bookings");
+    }
+  };
+
+  useEffect(() => {
+    if (user?.token) fetchMyBookings();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user) {
-      setError('Please login first');
-      return;
-    }
-
     if (!formData.terms) {
-      setError('Please accept terms');
+      setError("Accept terms first");
       return;
     }
 
@@ -62,174 +72,200 @@ function BookRoom() {
       await axios.post(
         `http://localhost:5000/api/bookings/book-room`,
         { ...formData, roomId },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${user.token}` } },
       );
 
-      setSuccess('Booking successful 🎉');
-      toast.success('Booking Request Sent successful!');
+      toast.success("Booking sent!");
+      fetchMyBookings();
 
-      setTimeout(() => {
-        navigate('/bookings'); // Redirect to bookings after 1 second
-      }, 1000);
+      setTimeout(() => navigate("/bookings"), 1000);
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || 'Booking failed');
-      toast.error(err.response?.data?.message || 'Booking failed');
+      setError("Booking failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-50 mx-auto my-4">
-      <h2>Book Your Stay</h2>
+    <div className="min-h-screen bg-gray-50 px-6 py-10">
+      {/* HEADER */}
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold">Book Your Stay</h1>
+        <p className="text-gray-500 mt-2">
+          Fill details and confirm your reservation
+        </p>
+      </div>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && (
+        <Alert variant="danger" className="text-center">
+          {error}
+        </Alert>
+      )}
 
-      <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Phone</Form.Label>
-          <Form.Control
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
-        <Row>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Check-In Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="checkInDate"
-                value={formData.checkInDate}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Check-Out Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="checkOutDate"
-                value={formData.checkOutDate}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Adults</Form.Label>
-              <Form.Control
-                type="number"
-                name="adults"
-                value={formData.adults}
-                onChange={handleChange}
-                min={1}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Children</Form.Label>
-              <Form.Control
-                type="number"
-                name="children"
-                value={formData.children}
-                onChange={handleChange}
-                min={0}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Room Type</Form.Label>
-          <Form.Select
-            name="roomType"
-            value={formData.roomType}
-            onChange={handleChange}
-          >
-            <option value="presidential">Presidential</option>
-            <option value="vip">VIP</option>
-            <option value="executive">Executive</option>
-            <option value="double">Double</option>
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="checkbox"
-            label="Accept terms & conditions"
-            name="terms"
-            checked={formData.terms}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-lime-500 font-bold py-2 px-7 !rounded-lg"
+      {/* MAIN LAYOUT */}
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* FORM */}
+        <motion.div
+          className="lg:col-span-2 bg-white rounded-2xl shadow-md p-6"
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
         >
-          {loading ? 'Booking...' : 'Book Now'}
-        </button>
-      </Form>
+          <Form onSubmit={handleSubmit}>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Check-In</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="checkInDate"
+                  value={formData.checkInDate}
+                  onChange={handleChange}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Check-Out</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="checkOutDate"
+                  value={formData.checkOutDate}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Adults</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="adults"
+                  value={formData.adults}
+                  onChange={handleChange}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Children</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="children"
+                  value={formData.children}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Room Type</Form.Label>
+              <Form.Select
+                name="roomType"
+                value={formData.roomType}
+                onChange={handleChange}
+              >
+                <option value="presidential">Presidential</option>
+                <option value="vip">VIP</option>
+                <option value="executive">Executive</option>
+                <option value="double">Double</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Check
+              type="checkbox"
+              label="Accept terms & conditions"
+              name="terms"
+              checked={formData.terms}
+              onChange={handleChange}
+              className="mb-4"
+            />
+
+            {/* REAL BUTTON (FIXED ISSUE) */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition"
+            >
+              {loading ? "Booking..." : "Confirm Booking"}
+            </button>
+          </Form>
+        </motion.div>
+
+        {/* SUMMARY */}
+        <motion.div
+          className="bg-white rounded-2xl shadow-md p-6 h-fit sticky top-10"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <h2 className="text-lg font-semibold mb-3">Live Booking Summary</h2>
+
+          <p>
+            <b>Room:</b> {formData.roomType}
+          </p>
+          <p>
+            <b>Adults:</b> {formData.adults}
+          </p>
+          <p>
+            <b>Children:</b> {formData.children}
+          </p>
+          <p>
+            <b>Check-In:</b> {formData.checkInDate || "-"}
+          </p>
+          <p>
+            <b>Check-Out:</b> {formData.checkOutDate || "-"}
+          </p>
+        </motion.div>
+      </div>
+
+      {/* 🔥 IMAGE BANNER SECTION */}
+      <div className="mt-10 bg-black rounded-3xl overflow-hidden relative">
+        <img
+          src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"
+          className="w-full h-[300px] object-cover opacity-60"
+          alt="hotel"
+        />
+
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center px-6">
+          <h2 className="text-3xl font-bold">Experience Premium Comfort</h2>
+          <p className="text-gray-200 mt-2 max-w-xl">
+            Every room is designed to give you a 5-star hotel experience with
+            modern amenities and luxury interiors.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

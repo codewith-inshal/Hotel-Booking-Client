@@ -1,137 +1,180 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import toast from 'react-hot-toast'
-import { useNavigate, useParams } from 'react-router-dom'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function EditRoom() {
-  const [roomData, setRoomData] = useState({})
-  const [image, setImage] = useState(null)
+  const [roomData, setRoomData] = useState({});
+  const [image, setImage] = useState(null);
 
-  const params = useParams()
-  const navigate = useNavigate()
+  const params = useParams();
+  const navigate = useNavigate();
 
   async function fetchRoom() {
-    const room = await axios.get(
-  `http://localhost:5000/api/rooms/${params.id}`
-);
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/rooms/${params.id}`,
+      );
+      setRoomData(res.data);
+    } catch (error) {
+      toast.error("Failed to fetch room details");
+    }
   }
 
   useEffect(() => {
-    fetchRoom()
-  }, [])
+    fetchRoom();
+  }, []);
 
   function changeHandler(e) {
-    const { name, value } = e.target
-    setRoomData({ ...roomData, [name]: value })
+    const { name, value } = e.target;
+    setRoomData({ ...roomData, [name]: value });
   }
 
   async function submitHandler(e) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const formData = new FormData()
-    formData.append("title", roomData.title)
-    formData.append("desc", roomData.desc)
-    formData.append("price", roomData.price)
-    formData.append("rating", roomData.rating)
-    formData.append("review", roomData.review)
+    const formData = new FormData();
+    formData.append("title", roomData.title);
+    formData.append("desc", roomData.desc);
+    formData.append("price", roomData.price);
+    formData.append("rating", roomData.rating);
+    formData.append("review", roomData.review);
 
     if (image) {
-      formData.append("image", image)
+      formData.append("image", image);
     }
 
-   await axios.patch(
-  `http://localhost:5000/api/rooms/${params.id}`,
-  formData,
-  { headers: { "Content-Type": "multipart/form-data" } }
-);
+    await axios.patch(
+      `http://localhost:5000/api/rooms/${params.id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
 
-
-    toast.success('Room Edited Successfully!')
-    navigate("/admin-dashboard")
+    toast.success("Room Updated Successfully!");
+    navigate("/admin-dashboard");
   }
 
   return (
-    <div className='w-50 mx-auto my-4'>
-      <h2>Edit Room</h2>
+    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-white">
+      {/* 🌟 LUMINOUS BACKGROUND */}
+      <div className="absolute inset-0">
+        <div className="absolute w-[500px] h-[500px] bg-lime-300 blur-[140px] rounded-full top-[-120px] left-[-120px] opacity-40"></div>
+        <div className="absolute w-[400px] h-[400px] bg-emerald-300 blur-[140px] rounded-full bottom-[-120px] right-[-120px] opacity-40"></div>
+      </div>
 
-      {/* SHOW CURRENT IMAGE */}
-      {roomData.image && (
-  <div className="text-center mb-3">
-    <img
-      src={`http://localhost:5000/uploads/${roomData.image}`}
-      alt="room"
-      width="120"
-      style={{ borderRadius: "10px" }}
-    />
-  </div>
-)}
+      {/* CARD */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="relative z-10 w-full max-w-2xl bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-200 p-6"
+      >
+        {/* HEADER */}
+        <div className="text-center mb-5">
+          <h2 className="text-3xl font-bold text-gray-800">
+            Edit Room Details
+          </h2>
+          <p className="text-gray-500 text-sm mt-1">
+            Update your luxury room information
+          </p>
+        </div>
 
-      <Form onSubmit={submitHandler} encType="multipart/form-data">
+        {/* CURRENT IMAGE */}
+        {roomData.image && (
+          <div className="flex justify-center mb-4">
+            <img
+              src={`http://localhost:5000/uploads/${roomData.image}`}
+              alt="room"
+              className="w-40 h-28 object-cover rounded-xl shadow-md"
+            />
+          </div>
+        )}
 
-        <Form.Group className="mb-3">
-          <Form.Label>Title</Form.Label>
-          <Form.Control
-            type="text"
-            name="title"
-            value={roomData.title || ""}
-            onChange={changeHandler}
-          />
-        </Form.Group>
+        <Form onSubmit={submitHandler} encType="multipart/form-data">
+          {/* TITLE */}
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              name="title"
+              value={roomData.title || ""}
+              onChange={changeHandler}
+              placeholder="Room Title"
+              className="rounded-xl py-2 shadow-sm focus:ring-2 focus:ring-lime-300"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            type="text"
-            name="desc"
-            value={roomData.desc || ""}
-            onChange={changeHandler}
-          />
-        </Form.Group>
+          {/* DESCRIPTION */}
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              name="desc"
+              value={roomData.desc || ""}
+              onChange={changeHandler}
+              placeholder="Room Description"
+              className="rounded-xl py-2 shadow-sm focus:ring-2 focus:ring-lime-300"
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Price</Form.Label>
-          <Form.Control
-            type="number"
-            name="price"
-            value={roomData.price || ""}
-            onChange={changeHandler}
-          />
-        </Form.Group>
+          {/* PRICE + RATING */}
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <Form.Control
+              type="number"
+              name="price"
+              value={roomData.price || ""}
+              onChange={changeHandler}
+              placeholder="Price"
+              className="rounded-xl py-2 shadow-sm focus:ring-2 focus:ring-lime-300"
+            />
 
-        <Form.Group className="mb-3">
-          <Form.Label>Rating</Form.Label>
-          <Form.Control
-            type="number"
-            name="rating"
-            value={roomData.rating || ""}
-            onChange={changeHandler}
-          />
-        </Form.Group>
+            <Form.Control
+              type="number"
+              name="rating"
+              value={roomData.rating || ""}
+              onChange={changeHandler}
+              placeholder="Rating"
+              className="rounded-xl py-2 shadow-sm focus:ring-2 focus:ring-lime-300"
+            />
+          </div>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Review</Form.Label>
-          <Form.Control
-            type="text"
-            name="review"
-            value={roomData.review || ""}
-            onChange={changeHandler}
-          />
-        </Form.Group>
+          {/* REVIEW */}
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              name="review"
+              value={roomData.review || ""}
+              onChange={changeHandler}
+              placeholder="Review"
+              className="rounded-xl py-2 shadow-sm focus:ring-2 focus:ring-lime-300"
+            />
+          </Form.Group>
 
-        {/* ✅ FILE INPUT */}
-        <Form.Group className="mb-3">
-          <Form.Label>Change Room Image</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-        </Form.Group>
+          {/* IMAGE */}
+          <Form.Group className="mb-4">
+            <Form.Control
+              type="file"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="rounded-xl py-2 shadow-sm"
+            />
+          </Form.Group>
 
-        <Button type='submit' variant='success'>Submit Edits</Button>
-      </Form>
+          {/* BUTTON */}
+          <motion.button
+            whileHover={{
+              scale: 1.02,
+              boxShadow: "0px 0px 25px rgba(163,230,53,0.6)",
+            }}
+            whileTap={{ scale: 0.97 }}
+            type="submit"
+            className="w-full bg-lime-400 text-black font-bold py-3 rounded-xl transition"
+          >
+            Update Room
+          </motion.button>
+        </Form>
+      </motion.div>
     </div>
-  )
+  );
 }
 
-export default EditRoom
+export default EditRoom;

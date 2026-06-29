@@ -1,35 +1,44 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Routes, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Route,
+  Routes,
+  BrowserRouter,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-import Homepage from './pages/Homepage';
-import Rooms from './pages/Rooms';
-import BookRoom from './pages/BookRoom';
-import Bookings from './pages/Bookings';
-import Contact from './pages/Contact';
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import ScrollToBottomButton from "./components/ScrollToBottomButton";
 
-import StaffDashboard from './pages/StaffDashboard';
-import StaffLogin from './pages/StaffLogin';
-import StaffRegister from './pages/StaffRegister';
+import Homepage from "./pages/Homepage";
+import Rooms from "./pages/Rooms";
+import BookRoom from "./pages/BookRoom";
+import Bookings from "./pages/Bookings";
+import Contact from "./pages/Contact";
 
-import AdminDashboard from './pages/AdminDashboard';
-import AdminLogin from './pages/AdminLogin';
-import AdminRegister from './pages/AdminRegister';
+import StaffDashboard from "./pages/StaffDashboard";
+import StaffLogin from "./pages/StaffLogin";
+import StaffRegister from "./pages/StaffRegister";
 
-import AddRoom from './pages/AddRoom';
-import EditRoom from './pages/EditRoom';
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
+import AdminRegister from "./pages/AdminRegister";
 
-import UserRegister from './pages/UserRegister';
-import UserLogin from './pages/UserLogin';
+import AddRoom from "./pages/AddRoom";
+import EditRoom from "./pages/EditRoom";
 
-import ForgetPassword from './pages/ForgetPassword';
-import ResetPassword from './pages/ResetPassword';
+import UserRegister from "./pages/UserRegister";
+import UserLogin from "./pages/UserLogin";
+
+import ForgetPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function ProtectedRoute({ children, redirectTo }) {
-  const user = localStorage.getItem('user');
+  const user = localStorage.getItem("user");
   const location = useLocation();
   return user ? (
     children
@@ -39,7 +48,7 @@ function ProtectedRoute({ children, redirectTo }) {
 }
 
 function StaffProtectedRoute({ children, redirectTo }) {
-  const staff = localStorage.getItem('staff');
+  const staff = localStorage.getItem("staff");
   const location = useLocation();
   return staff ? (
     children
@@ -49,7 +58,7 @@ function StaffProtectedRoute({ children, redirectTo }) {
 }
 
 function AdminProtectedRoute({ children, redirectTo }) {
-  const admin = localStorage.getItem('admin');
+  const admin = localStorage.getItem("admin");
   const location = useLocation();
   return admin ? (
     children
@@ -62,6 +71,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <ScrollToBottomButton />
 
       <Routes>
         {/* PUBLIC */}
@@ -137,6 +147,7 @@ function App() {
       </Routes>
 
       <Footer />
+      <ScrollToTopButton />
     </BrowserRouter>
   );
 }
