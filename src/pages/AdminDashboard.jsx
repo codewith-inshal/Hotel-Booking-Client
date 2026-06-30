@@ -6,6 +6,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { FaHotel, FaCalendarCheck, FaUsers, FaMoneyBill } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 /* ---------------- STATUS BADGE ---------------- */
 const StatusBadge = ({ status }) => {
@@ -30,7 +31,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem("admin"));
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = API_BASE_URL;
 
   /* ---------------- FETCH ROOMS ---------------- */
   const fetchRooms = async () => {

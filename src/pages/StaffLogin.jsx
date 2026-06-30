@@ -23,7 +23,7 @@ function StaffLogin() {
 
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = API_BASE_URL;
 
   // redirect if already logged in
   useEffect(() => {

@@ -3,12 +3,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { FaCheck, FaTimes, FaClipboardList } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function StaffDashboard() {
   const [bookings, setBookings] = useState([]);
 
   const staff = JSON.parse(localStorage.getItem("staff"));
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = API_BASE_URL;
 
   const fetchBookings = async () => {
     try {

@@ -12,12 +12,13 @@ import {
   FaConciergeBell,
   FaSpa,
 } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function Rooms() {
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_URL = API_BASE_URL;
 
   const fetchRooms = async () => {
     try {
