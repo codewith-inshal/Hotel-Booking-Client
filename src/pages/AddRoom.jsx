@@ -4,6 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 
 function AddRoom() {
   const [room, setRoom] = useState({
@@ -36,7 +37,7 @@ function AddRoom() {
       const formData = new FormData();
       for (let key in room) formData.append(key, room[key]);
 
-      await axios.post("http://localhost:5000/api/rooms", formData, {
+      await axios.post(`${API_BASE_URL}/api/rooms`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

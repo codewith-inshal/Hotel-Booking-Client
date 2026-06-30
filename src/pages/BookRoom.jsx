@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaUserFriends, FaClipboardList } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function BookRoom() {
   const { id: roomId } = useParams();
@@ -43,7 +44,7 @@ function BookRoom() {
   const fetchMyBookings = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/bookings/my-bookings`,
+        `${API_BASE_URL}/api/bookings/my-bookings`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         },
@@ -70,7 +71,7 @@ function BookRoom() {
       setLoading(true);
 
       await axios.post(
-        `http://localhost:5000/api/bookings/book-room`,
+        `${API_BASE_URL}/api/bookings/book-room`,
         { ...formData, roomId },
         { headers: { Authorization: `Bearer ${user.token}` } },
       );

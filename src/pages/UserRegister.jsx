@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 import {
   FaUser,
   FaEnvelope,
@@ -26,8 +27,6 @@ function UserRegister() {
 
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
   function changeHandler(e) {
     const { name, value } = e.target;
 
@@ -41,7 +40,7 @@ function UserRegister() {
     e.preventDefault();
 
     try {
-      await axios.post(`http://localhost:5000/api/user/user-register`, user);
+      await axios.post(`${API_BASE_URL}/api/user/user-register`, user);
 
       toast.success("User Registered Successfully!");
 

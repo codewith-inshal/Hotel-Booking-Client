@@ -13,7 +13,7 @@ function StaffDashboard() {
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/bookings/pending`,
+        `${API_URL}/api/bookings/pending`,
         {
           headers: {
             Authorization: `Bearer ${staff.token}`,
@@ -33,7 +33,7 @@ function StaffDashboard() {
   const updateStatus = async (id, status) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/bookings/${id}`,
+        `${API_URL}/api/bookings/${id}`,
         { status },
         {
           headers: {

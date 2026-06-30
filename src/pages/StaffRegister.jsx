@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 import {
   FaUser,
   FaEnvelope,
@@ -32,7 +33,7 @@ function StaffRegister() {
   async function submitHandler(e) {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/staff/staff-register", staff);
+      await axios.post(`${API_BASE_URL}/api/staff/staff-register`, staff);
 
       toast.success("Staff Created Successfully!");
       navigate("/admin-dashboard");

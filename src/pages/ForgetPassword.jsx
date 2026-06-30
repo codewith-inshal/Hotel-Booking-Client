@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 
 function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ function ForgetPassword() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/user/forget-password",
+        `${API_BASE_URL}/api/user/forget-password`,
         { email },
       );
 

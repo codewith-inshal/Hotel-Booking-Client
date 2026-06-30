@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -20,7 +21,7 @@ function ResetPassword() {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/user/reset-password/${token}`,
+        `${API_BASE_URL}/api/user/reset-password/${token}`,
         { newPassword },
       );
 

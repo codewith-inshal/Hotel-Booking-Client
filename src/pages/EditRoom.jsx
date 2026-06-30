@@ -4,6 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../api";
 
 function EditRoom() {
   const [roomData, setRoomData] = useState({});
@@ -15,7 +16,7 @@ function EditRoom() {
   async function fetchRoom() {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/rooms/${params.id}`,
+        `${API_BASE_URL}/api/rooms/${params.id}`,
       );
       setRoomData(res.data);
     } catch (error) {
@@ -47,7 +48,7 @@ function EditRoom() {
     }
 
     await axios.patch(
-      `http://localhost:5000/api/rooms/${params.id}`,
+      `${API_BASE_URL}/api/rooms/${params.id}`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
@@ -85,7 +86,7 @@ function EditRoom() {
         {roomData.image && (
           <div className="flex justify-center mb-4">
             <img
-              src={`http://localhost:5000/uploads/${roomData.image}`}
+              src={`${API_BASE_URL}/uploads/${roomData.image}`}
               alt="room"
               className="w-40 h-28 object-cover rounded-xl shadow-md"
             />

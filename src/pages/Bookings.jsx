@@ -3,16 +3,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaBan, FaCheckCircle } from "react-icons/fa";
+import API_BASE_URL from "../api";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/bookings/my-bookings`,
+        `${API_BASE_URL}/api/bookings/my-bookings`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
         },
@@ -30,7 +30,7 @@ function Bookings() {
   const cancelBooking = async (bookingId) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/bookings/${bookingId}/cancel`,
+        `${API_BASE_URL}/api/bookings/${bookingId}/cancel`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } },
       );
